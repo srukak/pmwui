@@ -10,15 +10,14 @@
 
   <script src="js/jquery.min.js"></script>
   <script src="js/moment.js"></script>
+  <script src="js/popper.js"></script>
   <script src="js/bootstrap.min.js"></script>
-  <script src="js/popper.min.js"></script>
   <script src="js/canvasjs.min.js"></script>
  
-  
-  <!-- <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>-->
-
-
 </head>
+
+
+<!-- This is an example Git Comment -->
 
 <body>
     <div class="header" align="center">PATE Monitor test build v0.01 </div>
@@ -81,7 +80,7 @@
     <br>
 </div>
 
-<!-- This is the Lower Container: For PSU Commands -->
+<!-- This is the Lower Container: For Charts & Data -->
 <div class="container-fluid">
     <div class="row" id="bottomRow">
 
@@ -98,14 +97,37 @@
 
                <div class="form-group row">
                    <label for="example-datetime-local-input" class="col-1 col-form-label" align="right">From</label>
-                   <div class="col-4">
+                   <div class="col-3">
                      <input class="form-control" type="datetime-local" id="begin_time" id="begintime">
                    </div>
                    <label for="example-datetime-local-input" class="col-1 col-form-label" align="right">To</label>
-                   <div class="col-4">
+                   <div class="col-3">
                      <input class="form-control" type="datetime-local" id="end_time">
                    </div>
-                 </div>
+
+                   <select id="x">
+                    <option value="d1a" selected>d1a</option>
+                    <option value="d1b">d1b</option>
+                    <option value="d1c">d1c</option>
+                    <option value="d2a">d2a</option>
+                    <option value="d2b">d2b</option>
+                    <option value="d3">d3</option>
+                    <option value="ac1">ac1</option>
+                    <option value="ac2">ac2</option>
+                  </select> 
+                  &nbsp;
+                  <select id="y">
+                    <option value="d1a">d1a</option>
+                    <option value="d1b">d1b</option>
+                    <option value="d1c">d1c</option>
+                    <option value="d2a" selected>d2a</option>
+                    <option value="d2b">d2b</option>
+                    <option value="d3">d3</option>
+                    <option value="ac1">ac1</option>
+                    <option value="ac2">ac2</option>
+                  </select> 
+
+                </div> 
 
           
                <div class="btn-group" role="group" aria-label="control buttons">
@@ -135,6 +157,11 @@
 document.getElementById("date").innerHTML = Date();
 </script>
 </footer>
+
+
+
+<!-- Here be the End of HTML -->
+
 
 
 
@@ -252,6 +279,7 @@ function createJSON() {
 
 
 function psuON() {
+    setTimeout(psuStatusRefresh, 1000);
     refreshCurrentChart();
     var myObject = new Object();
     myObject.power = 'ON';
@@ -264,10 +292,11 @@ function psuON() {
         dataType: "json",
         success: function(data){console.log(mystring);},
     });
-    setTimeout(psuStatusRefresh, 1000);
+   
 }
 
 function psuOFF() {
+    setTimeout(psuStatusRefresh, 1000);
     var myObject = new Object();
     myObject.power = 'OFF';
     var mystring = JSON.stringify(myObject);
@@ -279,7 +308,7 @@ function psuOFF() {
         dataType: "json",
         success: function(data){console.log(mystring);},
     });
-    setTimeout(psuStatusRefresh, 1000);
+   
 }
 
 function setVoltage() {
@@ -352,6 +381,9 @@ var toType = function(obj)
 // Pulseheight chart load and rendering
 //
 function refreshPHChart(){
+    var x_s=$('#x').val();;
+    var y_s=$('#y').val();
+    console.log(x,y);
     var myObject = new Object();
         myObject.start = $('#begin_time').val();
         myObject.end = $('#end_time').val();
@@ -360,7 +392,7 @@ function refreshPHChart(){
         var uy = moment(myObject.end).valueOf();
         uxs = moment(ux).unix();
         uys = moment(uy).unix();
-        var url = baseURL + '?' + 'begin=' + uxs + '&' + 'end=' + uys + '&fields=d1a,d2a';
+        var url = baseURL + '?' + 'begin=' + uxs + '&' + 'end=' + uys + '&fields='+ x_s + ',' + y_s;
             console.log(url);
          
     var phDataPoints = [];
@@ -380,7 +412,7 @@ function refreshPHChart(){
     });
     $.getJSON(url, function(data) {    
        $.each(data.data, function(index, obj){
-           phDataPoints.push({"x": obj.d2a , "y": obj.d1a});
+           phDataPoints.push({"x": eval('obj.'+x_s) , "y": eval('obj.'+y_s)});
        });
        phChart.render();
        console.log(phDataPoints);
@@ -411,6 +443,9 @@ function refreshPHChart(){
        title:{
            text:"PSU Current Load"
        },
+/*        toolTip:{
+        content:"x: {x}, y: {y}" ,
+        }, */
        exportEnabled: true,
        zoomEnabled: true,
        data: [{
