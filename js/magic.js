@@ -1,3 +1,6 @@
+// I be the leader, teh controller of the controllers. I also a messy noodle fudge.
+// I aspire to grow up into a more professional looking code one day.
+
 function fetchCSVhk() {
         var myObject = new Object();
         myObject.start = $('#begin_time').val();
@@ -121,7 +124,7 @@ function psuON() {
     myObject.power = 'ON';
     var mystring = JSON.stringify(myObject);
     $.ajax({
-     type: "POST",
+        type: "POST",
         url: "/api/psu/power",
         data: JSON.stringify(myObject),
         contentType: 'application/json',
@@ -137,7 +140,7 @@ function psuOFF() {
     myObject.power = 'OFF';
     var mystring = JSON.stringify(myObject);
     $.ajax({
-     type: "POST",
+        type: "POST",
         url: "/api/psu/power",
         data: JSON.stringify(myObject),
         contentType: 'application/json',
@@ -151,7 +154,7 @@ function setVoltage() {
     var myObject = new Object();
         myObject.voltage = $('#voltageLimit').val();
     $.ajax({
-     type: "POST",
+        type: "POST",
         url: "/api/psu/voltage",
         data: JSON.stringify(myObject),
         contentType: 'application/json',
@@ -168,7 +171,7 @@ function setCurrent() {
     var myObject = new Object();
         myObject.current_limit = $('#currentLimit').val();
     $.ajax({
-     type: "POST",
+        type: "POST",
         url: "/api/psu/current/limit",
         data: JSON.stringify(myObject),
         contentType: 'application/json',
