@@ -6,7 +6,7 @@
     <title>PATE Monitor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" type="text/css" media="all" href="css/bootstrap.css" />
-   <!-- <link rel="stylesheet" type="text/css" media="all" href="css/style.css" /> -->
+    <!--  <link rel="stylesheet" type="text/css" media="all" href="css/style.css" /> -->
 
   <script src="js/jquery.min.js"></script>
   <script src="js/moment.js"></script>
@@ -21,7 +21,7 @@
 <!-- This is an example Git Comment -->
 
 <body>
-    <div class="header" align="center">PATE Monitor test build v0.01 </div>
+    <div class="header" align="center">PATE Monitor test build v0.02 </div>
 
 <!-- This is the Upper Container: For LEFT and TOP MENU -->
     <div class="container-fluid">
@@ -41,21 +41,76 @@
 
 <!-- This is the Lower Container: For PSU Commands -->
 <div class="container-fluid">
+        <hr>
+        <!-- Navigation Class START -->
+
+      <!--  <nav class="navbar navbar-expand-lg navbar-light bg-light"> -->
+          <div class="row">
+              <div class="col-md-12" align="center">                   
+                   
+            <ul class="nav nav-tabs justify-content-center">
+                        <li class="nav-item">
+                          <a class="nav-link active" href="index.html">Monitor Mode</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="calibrationMode.html">Calibration Mode</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="science.html">Scientific Mode</a>
+                        </li>
+                        <li class="nav-item">
+                                <a class="nav-link disabled" href="science.html">Mission Mode</a>
+                              </li>
+                      </ul>
+           <!--   </nav> -->
+            </div>
+        </div>
+        <!-- Navigation Class END-->
+
+
     <div class="row" id="topRow">
              <div class="col-md-1"></div> 
 
              <div class="col-md-10" align="center">
 			 <hr>
                  <br> 
-				   <button type="button" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Turn ON the PSU." id="psuPowerON" onclick="psuON()">PSU ON</button>
-                   <button type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="Turn OFF the PSU." id="psuPowerOFF" onclick="psuOFF()">PSU OFF</button>
-                   <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="bottom" title="Refresh PSU Status Info." id="psuRefresh" onclick="psuStatusRefresh()">Refresh Status</button>
+				           <!-- <button type="button" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Turn ON the PSU." id="psuPowerON" onclick="psuON()">PSU ON</button> -->
+                   <button type="button" class="btn-success" data-toggle="tooltip" data-placement="bottom" title="Turn ON the PSU." id="psuPowerOFF" onclick="PSU_Status()">PSU ON</button>
+                   <button type="button" class="btn-info" data-toggle="tooltip" data-placement="bottom" title="Refresh PSU Status Info." id="psuRefresh" onclick="psuStatusRefresh()">Refresh Status</button>
                    <br> <br>
                   
                    <div class="psuStatus">PSU Status: &nbsp; <SPAN id="psuStatus1"></SPAN> <br> PSU Power State: &nbsp; <SPAN id="psuPowerState1"></SPAN> <br> <b>Current Limit: </b> <SPAN id="currentLimit1"></SPAN> A &emsp; <b>Voltage Level:</b> <SPAN id="voltageLimit1"></SPAN> V <br> <b>Measured Current: </b> <SPAN id="measuredCurrent1"></SPAN> mA &emsp; <b>Measured Voltage:</b> <SPAN id="measuredVoltage1"></SPAN> V </div>
                    <br>
-                   <div id="PSUchartContainer" style="height: 400px; width: 100%;"> Chart Area</div>
-                    <hr>
+                   <div class="row">
+                     <div class ="col-xs-6" id="PSUchartContainer" style="height: 400px; width: 50%;"> Chart Area Current</div>
+                     <div class ="col-xs-6" id="PSUchartContainerV" style="height: 400px; width: 50%;"> Chart Area Voltage</div>
+                  </div>
+                  <div class="row"> Select Chart Type:
+                    <div class="col-md-4" align="center">
+                           <select id="PSUchartContainerType">
+                              <option value="line" selected>Line chart</option>
+                              <option value="spline">Spline chart</option>
+                              <option value="area">Area Chart</option>
+                              <option value="stepArea">Step Area Chart</option>
+                              <option value="scatter">Scatter Plot</option>
+                          </select> 
+                          &nbsp; &nbsp;
+                          <button type="button" data-toggle="tooltip" data-placement="bottom" title="Chnage Chart Type" id="PSUchartContainerTypeButton">Refresh</button>
+                    </div>
+                    <div class="col-6">
+                        <select id="PSUchartContainerVType">
+                            <option value="line" selected>Line chart</option>
+                            <option value="spline">Spline chart</option>
+                            <option value="area">Area Chart</option>
+                            <option value="stepArea">Step Area Chart</option>
+                            <option value="scatter">Scatter Plot</option>
+                       </select> 
+                       &nbsp; &nbsp;
+                          <button type="button" data-toggle="tooltip" data-placement="bottom" title="Chnage Chart Type" id="PSUchartContainerVTypeButton">Refresh</button>
+                 </div>
+                 
+                  </div>
+                  <hr>
                    <div class="form-group row">
                     <label for="example-datetime-local-input" class="col-1 col-form-label" align="right">Voltage</label>
                     <div class="col-2">
@@ -78,80 +133,53 @@
              <div class="col-md-1"> </div>    
     </div>
     <br>
-    <br>
 </div>
 
 <!-- This is the Lower Container: For Charts & Data -->
-<div class="container-fluid">
-    <div class="row" id="bottomRow">
+<hr>
+<div class="col-md-12" align="center">
+    <h4>Test Mode Parameters</h4>
+    Session ID:
+    <div class="col-md-2">
+            <input type="text" class="form-control" placeholder="autogenerated">
+          </div>
+    Session Information:
+    <div class="col-md-2">
+            <input type="text" class="form-control" placeholder="Purpose? location?">
+          </div>
+            <br><br>
+    <button type="button" class="btn" data-toggle="tooltip" data-placement="bottom" title="Start or Stop the Test" onclick="startStopMonitoring()">Start/Stop Test</button>
+    <br> <br>
+    <p>Test Parametrs' Live View:</p>
+    
+      <div id="monitorModeChart" style="height: 400px; width: 50%;"> Monitor Mode Chart Variable</div>
+      <div class="row" align="center">
+        <div class="col-md-12">
+          <select id="monitorVariable">
+            <option value="d1a" selected>d1a</option>
+            <option value="d1b">d1b</option>
+            <option value="d1c">d1c</option>
+            <option value="d2a">d2a</option>
+            <option value="d2b">d2b</option>
+            <option value="d3">d3</option>
+            <option value="ac1">ac1</option>
+            <option value="ac2">ac2</option>
+          </select> 
+        
+            <select id="monitorChartType">
+              <option value="d1a">Bar Chart</option>
+              <option value="d1b" selected>Line chart</option>
+              <option value="d1c">Pie Chart</option>
+              <option value="d2a">Scatter Plot</option>
+            </select> 
+         
+         <button type="button" class="btn" data-toggle="tooltip" data-placement="bottom" title="Start or Stop the Test" onclick="startStopMonitoring()">Refresh</button>
 
-       <div class="col-md-1">
-           
-           
-           </div>
-      
-           <br>
-       <div class="col-md-8"> 
-            
-              <!--  <a href="https://placeholder.com"><img src="https://via.placeholder.com/640x480"></a> -->
-               <div id="chartContainer" style="height: 400px; width: 100%;"> Chart Area</div>
+        </div>
+      </div>
+   
+   <!--  <a href="https://placeholder.com"><img src="https://via.placeholder.com/640x480"></a> -->
 
-               <div class="form-group row">
-                   <label for="example-datetime-local-input" class="col-1 col-form-label" align="right">From</label>
-                   <div class="col-3">
-                     <input class="form-control" type="datetime-local" id="begin_time" id="begintime">
-                   </div>
-                   <label for="example-datetime-local-input" class="col-1 col-form-label" align="right">To</label>
-                   <div class="col-3">
-                     <input class="form-control" type="datetime-local" id="end_time">
-                   </div>
-
-                   <select id="x">
-                    <option value="d1a" selected>d1a</option>
-                    <option value="d1b">d1b</option>
-                    <option value="d1c">d1c</option>
-                    <option value="d2a">d2a</option>
-                    <option value="d2b">d2b</option>
-                    <option value="d3">d3</option>
-                    <option value="ac1">ac1</option>
-                    <option value="ac2">ac2</option>
-                  </select> 
-                  &nbsp;
-                  <select id="y">
-                    <option value="d1a">d1a</option>
-                    <option value="d1b">d1b</option>
-                    <option value="d1c">d1c</option>
-                    <option value="d2a" selected>d2a</option>
-                    <option value="d2b">d2b</option>
-                    <option value="d3">d3</option>
-                    <option value="ac1">ac1</option>
-                    <option value="ac2">ac2</option>
-                  </select> 
-
-                </div> 
-
-            <div class="col-md-12 text-center">
-               <div class="btn-group" role="group" aria-label="control buttons">
-                   <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="Load the chart in the space above." onclick="refreshPHChart()" id="LoadChart">Load Chart</button>
-                  <!--  <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="Fetch CSV for current dates." id="fetchCSV" onclick="createURL()">Create JSON</button> -->
-                   <!-- <button type="button" class="btn btn-secondary" onclick="bootstrap1()">Display Dates</button> -->
-               </div>
-               &nbsp;&nbsp;&nbsp; Download:
-               <div class="btn-group" role="group" aria-label="control buttons">
-                   <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="Download CSV of Pulse Height Data." onclick="fetchCSVph()" id="fetchCSVph">CSV Pulse Height Data</button>
-                   <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="Download CSV of HouseKeeping Data." onclick="fetchCSVhk()" id="fetchCSVhk">CSV HK Data</button>
-                   <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="Download CSV of HitCount Data." onclick="fetchCSVhit()" id="fetchCSVhit">CSV Hitcount Data</button>
-               </div>
-            </div>
-
-               <br>
-               <br>
-               <br>
-
-               <div class="alertMessage"></div>
-               <br>
-       </div> 
-   </div>
 </div>
 
 

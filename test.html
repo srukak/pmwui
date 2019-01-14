@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>PATE Monitor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" media="all" href="css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="css/style.css" /> 
+
+  <script src="js/jquery.min.js"></script>
+  <script src="js/moment.js"></script>
+  <script src="js/popper.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/canvasjs.min.js"></script>
+  <script src="js/magic.js"></script>
+ 
+</head>
+
+
+<!-- This is an example Git Comment -->
+
+<body>
+    <div class="header" align="center">PATE Monitor test build v0.02 </div>
+
+<!-- This is the Upper Container: For LEFT and TOP MENU -->
+    <div class="container-fluid">
+        <div class="row" id="topRow">
+                 <div class="col-md-1">
+                     
+                </div> 
+
+                 <div class="col-md-11">
+                       
+                 </div>    
+        </div>
+    </div>
+
+<!-- This is the Lower Container: For LEFT MENU and MIDDLE CONTENT and COMMAND WINDOW -->
+
+
+<!-- This is the Lower Container: For PSU Commands -->
+
+
+<!-- This is the Lower Container: For Charts & Data -->
+<div class="container-fluid">
+    <div class="row" id="bottomRow">
+
+       <div class="col-md-1">
+           
+          <h3>Controls</h3> 
+           </div>
+      
+           <br>
+       <div class="col-md-8"> 
+           <br>
+           <br>
+                <h4>Test Parameters</h4>
+               <a href="https://placeholder.com"><img src="https://via.placeholder.com/1024x480"></a>
+               <br>
+               <br>
+               &nbsp;
+            
+
+            <div class="col-md-12 text-center">
+               <div class="btn-group" role="group" aria-label="control buttons">
+                   <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="Load the chart in the space above." onclick="refreshPHChart()" id="LoadChart">Load Chart</button>
+                  <!--  <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="Fetch CSV for current dates." id="fetchCSV" onclick="createURL()">Create JSON</button> -->
+                   <!-- <button type="button" class="btn btn-secondary" onclick="bootstrap1()">Display Dates</button> -->
+               </div>
+               &nbsp;&nbsp;&nbsp; Download:
+               <div class="btn-group" role="group" aria-label="control buttons">
+                   <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="Download CSV of Pulse Height Data." onclick="fetchCSVph()" id="fetchCSVph">CSV Pulse Height Data</button>
+                   <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="Download CSV of HouseKeeping Data." onclick="fetchCSVhk()" id="fetchCSVhk">CSV HK Data</button>
+                   <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="Download CSV of HitCount Data." onclick="fetchCSVhit()" id="fetchCSVhit">CSV Hitcount Data</button>
+               </div>
+            </div>
+
+               <br>
+        
+       </div> 
+   </div>
+</div>
+
+
+
+<div class="footer" align="center"> 
+<hr>
+    <p id="date"></p>
+        <script>
+            document.getElementById("date").innerHTML = Date();
+        </script>
+</div>
+
+
+
+<!-- Here be the End of HTML -->
+
+</body>
+</html>
