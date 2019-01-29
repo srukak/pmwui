@@ -250,7 +250,7 @@ var toType = function(obj)
 function refreshPHChart(){
     var x_s=$('#x').val();;
     var y_s=$('#y').val();
-    console.log(x,y);
+   // console.log(x,y);
     var myObject = new Object();
         myObject.start = $('#begin_time').val();
         myObject.end = $('#end_time').val();
@@ -263,10 +263,18 @@ function refreshPHChart(){
             console.log(url);
          
     var phDataPoints = [];
+    var type_val1 = $('#chartType').val();
+    console.log(type_val1);
+    var data = [{
+        type: type_val1,
+        // xValueType: "dateTime",
+        // valueFormatString: "hh mm ss",
+        dataPoints : phDataPoints
+    }];
     var phChart = new CanvasJS.Chart("chartContainer",{
         theme: "light2",    // "light1", "dark1", "dark2"
         title:{
-            text:"Scatter Plor of Pulse Height Data"
+            text:"Scatter Plot of Pulse Height Data"
         },
         axisY:{
 		//title: "Log (Base 10) Scale",
@@ -274,26 +282,22 @@ function refreshPHChart(){
 	    },
         exportEnabled: true,
         zoomEnabled: true,
-        data: [{
-            type: "scatter",
-            // xValueType: "dateTime",
-            // valueFormatString: "hh mm ss",
-            dataPoints : phDataPoints
-        }]
+        data
     });
     $.getJSON(url, function(data) {    
        $.each(data.data, function(index, obj){
            phDataPoints.push({"x": eval('obj.'+x_s) , "y": eval('obj.'+y_s)});
        });
        phChart.render();
-       console.log(phDataPoints);
+       //console.log(phDataPoints);
    });
 
-    var type_val1 = $('#chartType').val();
-    console.log(phChart.data);
-   // phChart.data[0].set("type", type_val1);
-    phChart.render();
-
+    
+    //console.log(phChart.data);
+    //console.log(type_val1);
+    //data['type'] = type_val1;
+    //phChart.render();
+//console.log(data.type);
  $('#LoadChart').html("Refresh Chart");
  $('#LoadChart').prop('title', 'Reloads the chart with new data (if available).');
 }
@@ -331,7 +335,7 @@ function refreshMonitorChart(){
         exportEnabled: true,
         zoomEnabled: true,
         data: [{
-            type: "scatter",
+            type: "line",
             // xValueType: "dateTime",
             // valueFormatString: "hh mm ss",
             dataPoints : mvDataPoints
@@ -358,6 +362,7 @@ var closeFunction = new Boolean(false);
     function stopDisplay()
     {
         closeFunction = true;
+        //console.log(closeFunction.toString());
     }
 
 
@@ -454,7 +459,7 @@ function refreshVoltageChart(){
                 var xxtime = new Date(data.data.modified);
                 var x = xxtime.getTime();
                 dataPoints.push({"x": x , "y": data.data.measured_voltage});
-               // console.log(dataPoints);
+                console.log(dataPoints);
             });
             chart.render();
             if (closeFunction) {
@@ -473,6 +478,15 @@ function refreshVoltageChart(){
 function refreshCurrentChart(){
     closeFunction = false;
     var dataPoints = [];
+    var type_val = $('#PSUchartContainerType').val();
+    var data =  [{
+        type: type_val,
+        xValueType: "dateTime",
+        dataPoints : dataPoints,
+        valueFormatString: "hh mm ss", 
+        labelAngle: -20
+    }];
+
     var chart = new CanvasJS.Chart("PSUchartContainer",{
         theme: "light2",    // "light1", "dark1", "dark2"
         title:{
@@ -483,14 +497,10 @@ function refreshCurrentChart(){
             }, */
         exportEnabled: true,
         zoomEnabled: true,
-        data: [{
-            type: "line",
-            xValueType: "dateTime",
-            dataPoints : dataPoints,
-            valueFormatString: "hh mm ss", 
-            labelAngle: -20
-        }]
+        data
     });
+
+
     $.getJSON("/api/psu", function(data) {  
         $.each(data.data, function(key, value){
         var xxtime = new Date(data.data.modified);
@@ -502,26 +512,41 @@ function refreshCurrentChart(){
         updateChart();
     });
 
+
+    var updateInterval = 1000;
+    var dataLength = 10000; // number of dataPoints visible at any point
+
+
     function updateChart() {
+
+
+
         $.getJSON("/api/psu", function(data) {  
         $.each(data.data, function(key, value){
             var xxtime = new Date(data.data.modified);
             var x = xxtime.getTime();
             dataPoints.push({"x": x , "y": data.data.measured_current});
-           // console.log(dataPoints);
+            //console.log(dataPoints);
           });
+          
+        });
+    
+  
+    
+       
+        if (closeFunction) {return true;}
+
+    
+   // document.getElementById("PSUchartContainerTypeButton").addEventListener("click", function(){
+            
+         //   data['type'] = type_val1;
+           // refreshCurrentChart();
+         // console.log(type_val);
+       // })
 
         chart.render();
-        document.getElementById("PSUchartContainerTypeButton").addEventListener("click", function(){
-            var type_val = $('#PSUchartContainerType').val();
-            chart.data[0].set("type", type_val);
-            //chart.data[0].set("name", "My Chart");
-          //this.disabled = true;
-         // console.log(type_val);
-        })
-
-        if (closeFunction) { return true; }
-               setTimeout(function(){updateChart()}, 1000);
-        });
-    }
+ 
+    setTimeout(function(){updateChart()}, updateInterval);  
+    };
+    
 }
