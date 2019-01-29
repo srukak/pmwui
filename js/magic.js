@@ -303,56 +303,6 @@ function refreshPHChart(){
 }
 
 
-//
-//  Monitor MODE CHART
-//
-
-function refreshMonitorChart(){
-    var mv=$('#monitorVariable').val();
-  //  var y_s=$('#y').val();
-    console.log(x);
-        //var myObject = new Object();
-      //  myObject.start = $('#begin_time').val();
-      //  myObject.end = $('#end_time').val();
-        var baseURL = 	"/api/pulseheight";
-     //   var ux = moment(myObject.start).valueOf();
-     //   var uy = moment(myObject.end).valueOf();
-     //   uxs = moment(ux).unix();
-     //   uys = moment(uy).unix();
-        var url = baseURL + '?' + '&fields='+ mv;
-            console.log(url);
-         
-    var mvDataPoints = [];
-    var phChart = new CanvasJS.Chart("monitorModeChart",{
-        theme: "light2",    // "light1", "dark1", "dark2"
-        title:{
-            text:"Scatter Plor of Pulse Height Data"
-        },
-        axisY:{
-		//title: "Log (Base 10) Scale",
-		//logarithmic: true //change it to false
-	    },
-        exportEnabled: true,
-        zoomEnabled: true,
-        data: [{
-            type: "line",
-            // xValueType: "dateTime",
-            // valueFormatString: "hh mm ss",
-            dataPoints : mvDataPoints
-        }]
-    });
-    $.getJSON(url, function(data) {    
-       $.each(data.data, function(index, obj){
-           mvDataPoints.push({"x": eval('obj.'+x_s) , "y": eval('obj.'+y_s)});
-       });
-       phChart.render();
-       //console.log(mvDataPoints);
-   });
-
- $('#LoadChart').html("Refresh Chart");
- $('#LoadChart').prop('title', 'Reloads the chart with new data (if available).');
-}
-
 
 //
 // Kill A Rendering Function
@@ -423,7 +373,16 @@ var closeFunction = new Boolean(false);
 
 function refreshVoltageChart(){
         closeFunction = false;
+        var destroyInterval = 60000;
             var dataPoints = [];
+            var type_val = $('#PSUchartContainerVType').val();
+            var data =  [{
+                type: type_val,
+                xValueType: "dateTime",
+                dataPoints : dataPoints,
+                valueFormatString: "hh mm ss", 
+                labelAngle: -20
+            }];
             var chart = new CanvasJS.Chart("PSUchartContainerV",{
             theme: "light2",    // "light1", "dark1", "dark2"
                     title:{
@@ -434,15 +393,10 @@ function refreshVoltageChart(){
                         }, */
                     exportEnabled: true,
                     zoomEnabled: true,
-                    data: [{
-                        type: "line",
-                        xValueType: "dateTime",
-                        dataPoints : dataPoints,
-                        valueFormatString: "hh mm ss", 
-                        labelAngle: -20
-                    }]
+                    data
                     });
             $.getJSON("/api/psu", function(data) {  
+                console.log(data);
             $.each(data.data, function(key, value){
             var xxtime = new Date(data.data.modified);
                 var x = xxtime.getTime();
@@ -459,7 +413,7 @@ function refreshVoltageChart(){
                 var xxtime = new Date(data.data.modified);
                 var x = xxtime.getTime();
                 dataPoints.push({"x": x , "y": data.data.measured_voltage});
-                console.log(dataPoints);
+                //console.log(dataPoints);
             });
             chart.render();
             if (closeFunction) {
@@ -468,6 +422,14 @@ function refreshVoltageChart(){
             setTimeout(function(){updateChart()}, 1000);
             });
             }
+        intervalVar = setInterval(destroyChart, destroyInterval);
+            function destroyChart() {
+                chart.set("backgroundColor", "#F5DEB3");
+                //console.log("I was executed.");
+                chart.destroy();
+                chart = null;
+                refreshVoltageChart();
+            };
 }
 
 
@@ -514,13 +476,10 @@ function refreshCurrentChart(){
 
 
     var updateInterval = 1000;
-    var dataLength = 10000; // number of dataPoints visible at any point
-
+    var destroyInterval = 60000;
+      
 
     function updateChart() {
-
-
-
         $.getJSON("/api/psu", function(data) {  
         $.each(data.data, function(key, value){
             var xxtime = new Date(data.data.modified);
@@ -531,22 +490,118 @@ function refreshCurrentChart(){
           
         });
     
-  
-    
-       
-        if (closeFunction) {return true;}
-
-    
-   // document.getElementById("PSUchartContainerTypeButton").addEventListener("click", function(){
-            
-         //   data['type'] = type_val1;
-           // refreshCurrentChart();
-         // console.log(type_val);
-       // })
+        if (closeFunction) {return true;};
 
         chart.render();
  
-    setTimeout(function(){updateChart()}, updateInterval);  
+    setTimeout(function(){updateChart()}, updateInterval); 
+    };
+
+    intervalVar = setInterval(destroyChart, destroyInterval);
+    function destroyChart() {
+        chart.set("backgroundColor", "#F5DEB3");
+       // console.log("I was executed.");
+        chart.destroy();
+        chart = null;
+        refreshCurrentChart();
     };
     
 }
+
+//
+//  Monitor MODE CHART
+//
+
+ function refreshMonitorChart(){
+    closeFunction = false;
+    var dataPoints = [];
+    var type_val = $('#monitorChartType').val();
+    var y_s=$('#monitorVariable').val();
+    var baseURL = 	"/api/pulseheight";
+    var url = baseURL + '?' + 'begin=1541026800' + '&' + 'end=1548716400' + '&fields=' + y_s;
+    var data =  [{
+        type: type_val,
+        xValueType: "dateTime",
+        dataPoints : dataPoints,
+        valueFormatString: "hh mm ss", 
+        labelAngle: -20
+    }];
+var chartTitle = "Plotting: " + y_s;
+    var chart = new CanvasJS.Chart("monitorModeChart",{
+        theme: "light2",    // "light1", "dark1", "dark2"
+        title:{
+            text: chartTitle
+        },
+            toolTip:{
+            content:"x: {x}, y: {y}" ,
+            }, 
+         exportEnabled: true,
+        zoomEnabled: true,
+        data
+    });
+
+//var url = "/api/pulseheight?begin=1541026800&end=1548716400&" + '&fields='+ y_s;
+    $.getJSON(url, function(data) { 
+        console.log(data); 
+        $.each(data.data, function(key, obj){
+        var xxtime = new Date(obj.timestamp);
+       // console.log(xxtime);
+            var x = xxtime.getTime();
+           // console.log(x);
+            dataPoints.push({"x": x , "y": eval('obj.'+y_s)});
+        });
+        chart.render();
+        updateChart();
+    });
+
+
+    var updateInterval = 1000;
+    var destroyInterval = 60000;
+      
+
+    function updateChart() {
+        $.getJSON(url, function(data) {  
+        $.each(data.data, function(key, obj){
+            var xxtime = new Date(obj.timestamp);
+            var x = xxtime.getTime();
+            dataPoints.push({"x": x , "y": eval('obj.'+y_s)});
+            //console.log(dataPoints);
+          });
+          
+        });
+    
+        if (closeFunction) {return true;};
+
+        chart.render();
+ 
+   // setTimeout(function(){updateChart()}, updateInterval); 
+    };
+
+    intervalVar = setInterval(destroyChart, destroyInterval);
+    function destroyChart() {
+        chart.set("backgroundColor", "#F5DEB3");
+       // console.log("I was executed.");
+        chart.destroy();
+        chart = null;
+        refreshMonitorChart();
+    };
+    
+}
+
+
+
+
+
+
+
+
+function generateID(){
+    let random_number = Math.random() * (1000-1) + 1;
+     random_number = Math.floor(random_number);
+     $("#session_ID").val(random_number);   
+}
+
+window.onload = function() {
+    generateID();
+};
+   
