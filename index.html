@@ -36,6 +36,7 @@
         </div>
     </div>
 
+
 <!-- This is the Lower Container: For LEFT MENU and MIDDLE CONTENT and COMMAND WINDOW -->
 
 
@@ -150,7 +151,7 @@
             <input type="text" class="form-control" placeholder="Purpose? location?" />
           </div>
             <br><br>
-    <button type="button" class="btn" data-toggle="tooltip" data-placement="bottom" title="Start or Stop the Test" onclick="startStopMonitoring()">Start/Stop Test</button>
+    <button type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="Start or Stop the Test" onclick="startStopMonitoring()">Start/Stop Test</button>
     <br> <br>
     <p>Test Parametrs' Live View (refreshes every minute, for now):</p>
     
@@ -177,13 +178,64 @@
               <option value="bar">Bar Chart</option>
             </select> 
          
-         <button type="button" data-toggle="tooltip" data-placement="bottom" title="Start or Stop the Test" onclick="startStopMonitoring()">Refresh</button>
+         <button type="button" data-toggle="tooltip" data-placement="bottom" title="Refreshes the Monitor chart above with a new variable or chart type." onclick="startStopMonitoring()">Refresh</button>
 
         </div>
       </div>
    
    <!--  <a href="https://placeholder.com"><img src="https://via.placeholder.com/640x480"></a> -->
 
+</div>
+
+<!-- Button trigger modal -->
+<div class="col-md-2" align="center">
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" title="Shows the info you probably didn't read the first time. :p">
+ That Welcome Screen
+</button>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="myModalLabel">Welcome to PATE Monitor.</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+       
+This is the User Interface that communicates with the Backend, the backend then executes whatever requests are being made. Once protocol functionality is defined, the backend functions/features will be defined and subsequently control functions/actors/buttons will be added to the UI.
+<hr>
+<br>
+<b>What do we have?</b>
+<p>
+    We have three active modes/views:
+<ul>
+<li> 	Monitor Mode:</li>
+-	For monitoring PATE on the ground.
+<li> 	Calibration Mode:</li>
+-	For testing PATE when on ground.
+<li> 	Scientific Mode:</li>
+-	For accessing and reasonably manipulating PATE produced science data.
+  </ul>
+</p>
+<blockquote class="blockquote text-center"> <p class="mb-0"><mark>“Each button has an associated ‘tooltip’ that’ll tell you what it does.”</mark>  </p> </blockquote>
+
+<b>Some Instructions: </b><br>
+<p>Click <b>PSU ON </b>and the power supply current and voltage levels will appear. This directly controls the PSU on Jani’s desk now. Set the voltage levels, change chart types, play around but don’t burn his desk.<br>
+    There is also the option to monitor one value produced by PATE during the test. For all demonstrations here, PATE Pulse Height Data is used. Because it has a clear naming and more understandable, to me at least. 
+    <br>
+    <b>Date & Time: </b>we have simulated data for one month in November 2018. You can just use <mark>1/1/2018 00:00:00 - 1/1/2019 00:00:00</mark> to get the data in the database. Time information is a must, only entering the date won’t work.
+    Issue: In Edge, Chrome, Firefox Focus (mobile) a date selection window will appear. This will not work in Firefox Desktop. You can copy-paste the above dates into the respective fields if you like.</p>
+    <blockquote class="blockquote text-center"> <p class="mb-0"><mark>Any issues/suggestions/features/changes? email me at: <a href="mailto:srukak@utu.fi">srukak@utu.fi</a> or crate an issue at:<a href="https://github.com/srukak/pmwui ">https://github.com/srukak/pmwui</a> </mark>  </p> </blockquote>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 
@@ -196,7 +248,11 @@
         </script>
 </div>
 
-
+<script type="text/javascript">
+  $(window).on('load',function(){
+      $('#myModal').modal('show');
+  });
+</script>
 
 <!-- Here be the End of HTML -->
 
